@@ -12,12 +12,8 @@ pipeline {
     }
     stage("build") {
       steps {
-        echo "build stage"
-      }
-    }
-    stage("test") {
-      steps {
-        echo "test stage"
+        echo "build docker image"
+        sh "docker build -t dhcp-ldap-backend-jenkins ."
       }
     }
     stage("deploy") {
