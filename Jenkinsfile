@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  environment {
+    imageName = 'yaredd/dhcp-ldap-backend-jenkins'
+    dockerImage = ''
+  }
+
   stages {
     stage("lint") {
       agent {
@@ -13,7 +18,20 @@ pipeline {
     stage("build") {
       steps {
         echo "build docker image"
-        sh "docker build -t dhcp-ldap-backend-jenkins ."
+        script {
+          dockerImage = docker.build(imageName)
+        }
+      }
+    }
+    stage("push image") {
+      steps {
+        echo "push image to hub.docker.com using the dhockerhub credential"
+        script {
+          docker.withRegistry('', 'dockerhub') {
+            dockerImage.push("$BUILD_NUMBER")
+            dockerImage.push("latest")
+          }
+        }
       }
     }
     stage("deploy") {
