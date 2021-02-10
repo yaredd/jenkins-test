@@ -25,7 +25,7 @@ pipeline {
     }
     stage("push image") {
       steps {
-        echo "push image to hub.docker.com using the dhockerhub credential"
+        echo "push image to hub.docker.com using the dhockerhub credential and tag image with latetest and build number to track changes."
         script {
           docker.withRegistry('', 'dockerhub') {
             dockerImage.push("$BUILD_NUMBER")
